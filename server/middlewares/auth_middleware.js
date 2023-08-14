@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
-module.exports.userVerification = async (req, res) => {
+module.exports.userVerification = async (req, res, next) => {
   try {
     const token = req.cookies.token;
 
@@ -15,7 +15,8 @@ module.exports.userVerification = async (req, res) => {
       } else {
         const user = await User.findById(data.id);
         if (user) {
-          return res.json({ status: true, user: user.username, userType: user.userType });
+          req.user = { status: true, user: user.username, userType: user.userType };
+          next();
         } else {
           return res.json({ status: false });
         }

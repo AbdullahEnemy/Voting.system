@@ -15,7 +15,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/local")
 app.get("/", (req,res)=>{
     res.send("Hello Enemy");
 });
-
+app.use(express.json());
 app.listen(PORT,()=>{
     console.log("serve started listening to app")
 
@@ -31,11 +31,11 @@ app.use('/users', userRouter);
     constituency:"greentown"
 })
 user1.save();*/
-/*user.find().then((u)=>{
-    console.log(u)
-})
-.catch(()=>
-console.log("Error:user not found")
-)*/
+//  user.find().then((u)=>{
+//      console.log(u)
+//  })
+//  .catch(()=>
+//  console.log("Error:user not found")
+//  )
 
 

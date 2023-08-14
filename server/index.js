@@ -1,26 +1,43 @@
-const express = require('express')
-const app = express();
-const mongoose= require('mongoose')
-let  user=require('./models/user')
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const userRouter = require("./routes/users_router");
-const PORT =4000;
-mongoose.connect("mongodb://127.0.0.1:27017/local")
-.then(()=>{
-    console.log('connected')
-})
-.catch((err)=>{
 
-    console.log('error')
-})
-app.get("/", (req,res)=>{
-    res.send("Hello Enemy");
+require("dotenv").config();
+
+const { MONGO_URL, PORT } = process.env;
+const app = express();
+
+mongoose
+  .connect(MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connection established with MongoDB");
+  })
+  .catch((err) => {
+    console.log("Error connecting to MongoDB:", err);
+  });
+
+app.listen(PORT, () => {
+  console.log("Server listening on port " + PORT);
 });
+
+app.use(
+  cors({
+    origin: ["http://localhost:4000"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
+app.use(cookieParser());
+
 app.use(express.json());
-app.listen(PORT,()=>{
-    console.log("serve started listening to app")
 
-});
-app.use('/users', userRouter);
+app.use("/users", userRouter);
 /*let user1=new user({
 
     email:"test1@exmaple.com",

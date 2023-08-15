@@ -62,7 +62,7 @@ module.exports.update = async (req, res) => {
   try {
     if (authurize_user(req, res)) return res;
 
-    const constituency = await Constituency.findOneAndUpdate(
+    const constituency = await Constituency.updateOne(
       { _id: req.params.id },
       { $set: { district: req.body.district } }
     );

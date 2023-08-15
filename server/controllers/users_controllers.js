@@ -56,10 +56,74 @@ const login = async (req, res, next) => {
     res.status(500).json({ error: `An error occurred during login: ${error}` });
   }
 };
+const index = async (req, res) => {
+  try {
+    if (authurize_user(req, res)) return res;
 
+    const  Users  = await  User.find();
+    if (! Users ) {
+      return res.json({ message: "No  Users Registered" });
+    }
+
+    res.status(200).json( Users);
+  } catch (error) {
+    res.status(500).json({
+      error: `An error occurred when fetching  Users : ${error}`,
+    });
+  }
+};
+const del = async (req, res) => {
+  try {
+    if (authurize_user(req, res)) return res;
+
+    const deletedUser = await  User.findOneAndDelete({
+      _id: req.params.id,
+    });
+
+    if (!deletedUser) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({
+      error: `An error occurred during User deletion: ${error}`,
+    });
+  }
+};
+const update = async (req, res) => {
+  try {
+    if (authurize_user(req, res)) return res;
+
+    const  updatedUser = await User.updateOne(
+      { _id: req.params.id },
+      { $set: { email: req.body.email , username:req.body.username , password : req.body.password ,constituency : req.body.constituency, usertype:req.body.userType,CNIC:req.body.CNIC } }
+    );
+     
+    if (!updatedUser) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User Updated successfully" });
+  } catch (error) {
+    res.status(500).json({
+      error: `An error occurred during User updation: ${error}`,
+    });
+  }
+};
+const authurize_user = (req, res) => {
+  if (req.user && req.user.userType !== "admin")
+    return res.json({
+      status: 403,
+      message: "You are not allowed to perform this action",
+    });
+};
 const userController = {
   signup: signup,
   login: login,
+  index: index,
+  del: del ,
+  update: update,
 };
 
 module.exports = userController;

@@ -4,6 +4,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const userRouter = require("./routes/users_router");
 const partyRouter = require("./routes/party_router");
+const candidateRouter = require("./routes/candidate_router");
 const constituencyRouter = require("./routes/constituency_router");
 require("dotenv").config();
 const { MONGO_URL, PORT } = process.env;
@@ -40,6 +41,7 @@ app.use(express.json());
 app.use("/users", userRouter);
 app.use("/constituency", constituencyRouter);
 app.use("/party", partyRouter);
+app.use("/candidate", candidateRouter);
 /*let user1=new user({
 
     email:"test1@exmaple.com",

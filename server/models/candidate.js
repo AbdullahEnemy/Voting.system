@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const candidateSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: [true, "Your email address is required"],
+    unique: true,
+  },
   name: {
     type: String,
     required: [true, "Candidate name is required"],
@@ -12,6 +17,15 @@ const candidateSchema = new mongoose.Schema({
   party :{
     type: String,
     required: [true, "party is required"],
+  },
+  CNIC: {
+    type: String,
+    required: [true, "CNIC is required"],
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: [true, "Your password is required"],
   },
   createdAt: {
     type: Date,

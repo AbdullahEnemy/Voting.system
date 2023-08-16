@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
   },
   userType: {
     type: String,
-    enum: ['admin', 'voter', 'candidate'],
+    enum: ['admin', 'voter'],
     default: 'voter',
     required: [true, "Missing required field 'userType'"],
   },

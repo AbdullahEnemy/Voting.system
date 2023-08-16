@@ -28,20 +28,15 @@ const signup = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    if(!email || !password ){
-      return res.json({message:'All fields are required'})
+    if (!email || !password) {
+      return res.json({ message: "All fields are required" });
     }
-
     const user = await User.findOne({ email: req.body.email });
-
-    console.log(user)
-
     if (user) {
       const auth = await bcrypt.compare(req.body.password, user.password);
       if (!auth) {
         return res.status(401).json({ message: "Password is incorrect" });
       }
-      
       const token = createSecretToken(user._id);
       res.cookie("token", token, {
         withCredentials: true,
@@ -51,7 +46,7 @@ const login = async (req, res, next) => {
     } else {
       res.status(400).json({ message: "User not found." });
     }
-    next()
+    // next()
   } catch (error) {
     res.status(500).json({ error: `An error occurred during login: ${error}` });
   }
@@ -60,12 +55,12 @@ const index = async (req, res) => {
   try {
     if (authurize_user(req, res)) return res;
 
-    const  Users  = await  User.find();
-    if (! Users ) {
+    const Users = await User.find();
+    if (!Users) {
       return res.json({ message: "No  Users Registered" });
     }
 
-    res.status(200).json( Users);
+    res.status(200).json(Users);
   } catch (error) {
     res.status(500).json({
       error: `An error occurred when fetching  Users : ${error}`,
@@ -76,7 +71,7 @@ const del = async (req, res) => {
   try {
     if (authurize_user(req, res)) return res;
 
-    const deletedUser = await  User.findOneAndDelete({
+    const deletedUser = await User.findOneAndDelete({
       _id: req.params.id,
     });
 
@@ -95,11 +90,20 @@ const update = async (req, res) => {
   try {
     if (authurize_user(req, res)) return res;
 
-    const  updatedUser = await User.updateOne(
+    const updatedUser = await User.updateOne(
       { _id: req.params.id },
-      { $set: { email: req.body.email , username:req.body.username , password : req.body.password ,constituency : req.body.constituency, usertype:req.body.userType,CNIC:req.body.CNIC } }
+      {
+        $set: {
+          email: req.body.email,
+          username: req.body.username,
+          password: req.body.password,
+          constituency: req.body.constituency,
+          usertype: req.body.userType,
+          CNIC: req.body.CNIC,
+        },
+      }
     );
-     
+
     if (!updatedUser) {
       return res.status(400).json({ message: "User not found" });
     }
@@ -108,6 +112,23 @@ const update = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: `An error occurred during User updation: ${error}`,
+    });
+  }
+};
+const show = async (req, res) => {
+  try {
+    if (authurize_user(req, res)) return res;
+
+    const showUser = await User.findOne({ _id: req.params.id });
+
+    if (!showUser) {
+      return res.json({ message: "No User Found" });
+    }
+
+    res.status(200).json(showUser);
+  } catch (error) {
+    res.status(500).json({
+      error: `An error occurred during User fetching: ${error}`,
     });
   }
 };
@@ -122,8 +143,9 @@ const userController = {
   signup: signup,
   login: login,
   index: index,
-  del: del ,
+  del: del,
   update: update,
+  show: show,
 };
 
 module.exports = userController;

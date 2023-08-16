@@ -74,6 +74,23 @@ module.exports.register = async (req, res) => {
       });
     }
   };
+  module.exports.show = async (req, res) => {
+    try {
+      if (authurize_user(req, res)) return res;
+  
+      const showParty = await party.findOne({ _id: req.params.id });
+  
+      if (!showParty) {
+        return res.json({ message: "No party Found" });
+      }
+  
+      res.status(200).json(showParty);
+    } catch (error) {
+      res.status(500).json({
+        error: `An error occurred during party fetching: ${error}`,
+      });
+    }
+  };
   const authurize_user = (req, res) => {
     if (req.user && req.user.userType !== "admin")
       return res.json({

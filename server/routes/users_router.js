@@ -11,5 +11,6 @@ router.post("/", userVerification);
 router.get("/", userVerification, userController.index);
 router.delete("/:id", userVerification, userController.del);
 router.patch("/:id", userVerification, userController.update);
+router.get("/:id", userVerification, userController.show);
 
 module.exports = router;

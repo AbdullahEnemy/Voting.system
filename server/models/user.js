@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
   },
   userType: {
     type: String,
-    enum: ['admin', 'voter'],
+    enum: ['admin', 'voter','candidate'],
     default: 'voter',
     required: [true, "Missing required field 'userType'"],
   },
@@ -37,6 +37,14 @@ const userSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  constituencyNumber: {
+    type: String,
+ 
+  },
+  party :{
+    type: String,
+   
   },
 });
 

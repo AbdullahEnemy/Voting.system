@@ -9,11 +9,7 @@ const voteSchema = new mongoose.Schema({
     type: String,
     required: [true, "party is required"],
   },
-  isVoted:{
-    type: Boolean,
-    default:'false'
-  },
-  voterId :
+  CNIC :
   {
     type: String,
     required: [true, "voterId is required"],

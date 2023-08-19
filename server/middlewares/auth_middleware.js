@@ -15,7 +15,13 @@ module.exports.userVerification = async (req, res, next) => {
       } else {
         const user = await User.findById(data.id);
         if (user) {
-          req.user = { status: true, user: user.username, userType: user.userType };
+          req.user = {
+            status: true,
+            user: user.username,
+            userType: user.userType,
+            constituency: user.constituency,
+            constituencyNumber: user.constituencyNumber,
+          };
           next();
         } else {
           return res.json({ status: false });
@@ -24,6 +30,8 @@ module.exports.userVerification = async (req, res, next) => {
     });
   } catch (error) {
     console.error("Error during user verification:", error);
-    res.status(500).json({ error: "An error occurred during user verification" });
+    res
+      .status(500)
+      .json({ error: "An error occurred during user verification" });
   }
 };

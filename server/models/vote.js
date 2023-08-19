@@ -15,10 +15,11 @@ const voteSchema = new mongoose.Schema({
     required: [true, "voterId is required"],
     unique: true,
   },
-  candidateId :
+  candidateId:
   {
     type: String,
-    required: [true, "voterId is required"],
+    required: [true, "Constituency number is required"],
+
   },
   createdAt: {
     type: Date,

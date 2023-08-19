@@ -4,8 +4,9 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const userRouter = require("./routes/users_router");
 const partyRouter = require("./routes/party_router");
-
+const voteController = require("./routes/vote_router");
 const constituencyRouter = require("./routes/constituency_router");
+const userRequest = require("./routes/request_router");
 require("dotenv").config();
 const { MONGO_URL, PORT } = process.env;
 const app = express();
@@ -41,6 +42,8 @@ app.use(express.json());
 app.use("/users", userRouter);
 app.use("/constituency", constituencyRouter);
 app.use("/party", partyRouter);
+app.use("/vote", voteController);
+app.use("/request", userRequest);
 
 /*let user1=new user({
 
@@ -58,5 +61,3 @@ user1.save();*/
 //  .catch(()=>
 //  console.log("Error:user not found")
 //  )
-
-

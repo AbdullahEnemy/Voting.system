@@ -8,7 +8,6 @@ router.post("/register", userVerification, partyController.register);
 router.get("/", userVerification, partyController.index);
 router.delete("/:id", userVerification, partyController.delete);
 router.patch("/:id", userVerification, partyController.update);
- router.get("/:id", userVerification, partyController.show);
-
+router.get("/:id", userVerification, partyController.show);
 
 module.exports = router;

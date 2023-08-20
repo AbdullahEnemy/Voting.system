@@ -8,7 +8,7 @@ const partySchema = new mongoose.Schema({
   },
   symbol: {
     type: String,
-    required: [true, "symbol is required"],
+    required: [false, "symbol is required"],
   },
   partyLeader: {
     type: String,

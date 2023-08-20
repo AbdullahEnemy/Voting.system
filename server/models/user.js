@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
-  id: {
-    type: Number,
-    unique: true,
-  },
   email: {
     type: String,
     required: [true, "Your email address is required"],
@@ -21,8 +17,8 @@ const userSchema = new mongoose.Schema({
   },
   userType: {
     type: String,
-    enum: ['admin', 'voter','candidate'],
-    default: 'voter',
+    enum: ["admin", "voter", "candidate"],
+    default: "voter",
     required: [true, "Missing required field 'userType'"],
   },
   CNIC: {
@@ -40,17 +36,14 @@ const userSchema = new mongoose.Schema({
   },
   constituencyNumber: {
     type: String,
- 
   },
-  party :{
+  party: {
     type: String,
-   
   },
 });
 
 userSchema.pre("save", async function (next) {
   try {
-    this.id = await mongoose.model("User").countDocuments() + 1;
     this.password = await bcrypt.hash(this.password, 12);
     next();
   } catch (error) {

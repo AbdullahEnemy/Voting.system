@@ -1,102 +1,147 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from "react";
 
-export default function Signup() {
+export default function SignUp() {
+  const [username, setUsername] = useState("");
+  const [CNIC, setCNIC] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [constituency, setConstituency] = useState("");
+  const [constituencies, setConstituencies] = useState();
 
-	// States for registration
-	const [name, setName] = useState('');
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-	// States for checking the errors
-	const [submitted, setSubmitted] = useState(false);
-	const [error, setError] = useState(false);
+    fetch("http://localhost:4000/users/signup", {
+      method: "POST",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+        CNIC,
+        constituency,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          window.location.href = "/sign-in";
+        } else {
+          alert("Something went wrong");
+        }
+      });
+  };
 
-	// Handling the name change
-	const handleName = (e) => {
-		setName(e.target.value);
-		setSubmitted(false);
-	};
+  useEffect(() => {
+    fetch("http://localhost:4000/constituency", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data) {
+          setConstituencies(data);
+        } else {
+          alert("Something went wrong");
+        }
+      })
+      .catch((error) => {
+        console.error("Error during fetch:", error);
+        alert(
+          "An error occurred while fetching constituencies. Please try again later."
+        );
+      });
+    // eslint-disable-next-line
+  }, []);
 
-	// Handling the email change
-	const handleEmail = (e) => {
-		setEmail(e.target.value);
-		setSubmitted(false);
-	};
+  const handleOptionChange = (event) => {
+    console.log("Event: ", event.target.value);
+    setConstituency(event.target.value);
+  };
 
-	// Handling the password change
-	const handlePassword = (e) => {
-		setPassword(e.target.value);
-		setSubmitted(false);
-	};
+  return (
+    constituencies && (
+      <div className="auth-wrapper">
+        <div className="auth-inner">
+          <form onSubmit={handleSubmit}>
+            <h3>Sign Up</h3>
 
-	// Handling the form submission
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		if (name === '' || email === '' || password === '') {
-			setError(true);
-		} else {
-			setSubmitted(true);
-			setError(false);
-		}
-	};
+            <div className="mb-3">
+              <label>Username</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="First name"
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
 
-	// Showing success message
-	const successMessage = () => {
-		return (
-			<div
-				className="success"
-				style={{
-					display: submitted ? '' : 'none',
-				}}>
-				<h1>User {name} successfully registered!!</h1>
-			</div>
-		);
-	};
+            <div className="mb-3">
+              <label>Email address</label>
+              <input
+                type="email"
+                className="form-control"
+                placeholder="Enter email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
 
-	// Showing error message if error is true
-	const errorMessage = () => {
-		return (
-			<div
-				className="error"
-				style={{
-					display: error ? '' : 'none',
-				}}>
-				<h1>Please enter all the fields</h1>
-			</div>
-		);
-	};
+            <div className="mb-3">
+              <label>Password</label>
+              <input
+                type="password"
+                className="form-control"
+                placeholder="Enter password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
 
-	return (
-		<div className="form">
-			<div>
-				<h1>User Registration</h1>
-			</div>
+            <div className="mb-3">
+              <label>CNIC</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Last name"
+                onChange={(e) => setCNIC(e.target.value)}
+              />
+            </div>
 
-			{/* Calling to the methods */}
-			<div className="messages">
-				{errorMessage()}
-				{successMessage()}
-			</div>
+            <div className="mb-3">
+              <label>Select Constituency</label>
+              <select value={constituency} onChange={handleOptionChange}>
+                <option value="">Select an option</option>
+                {constituencies.map((option, index) => (
+                  <option key={index} value={option.number}>
+                    {option.number}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-			<form>
-				{/* Labels and inputs for form data */}
-				<label className="label">Name</label>
-				<input onChange={handleName} className="input"
-					value={name} type="text" />
-
-				<label className="label">Email</label>
-				<input onChange={handleEmail} className="input"
-					value={email} type="email" />
-
-				<label className="label">Password</label>
-				<input onChange={handlePassword} className="input"
-					value={password} type="password" />
-
-				<button onClick={handleSubmit} className="btn"
-						type="submit">
-					Submit
-				</button>
-			</form>
-		</div>
-	);
+            <div className="d-grid">
+              <button type="submit" className="btn btn-primary">
+                Sign Up
+              </button>
+            </div>
+            <p className="forgot-password text-right">
+              Already registered <a href="/sign-in">sign in?</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    )
+  );
 }

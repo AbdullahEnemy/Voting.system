@@ -6,10 +6,12 @@ const userRouter = require("./routes/users_router");
 const partyRouter = require("./routes/party_router");
 const voteController = require("./routes/vote_router");
 const constituencyRouter = require("./routes/constituency_router");
+const electionRouter = require("./routes/election_router");
 const userRequest = require("./routes/request_router");
 require("dotenv").config();
 const { MONGO_URL, PORT } = process.env;
 const app = express();
+
 
 mongoose
   .connect(MONGO_URL, {
@@ -44,6 +46,7 @@ app.use("/constituency", constituencyRouter);
 app.use("/party", partyRouter);
 app.use("/vote", voteController);
 app.use("/request", userRequest);
+app.use("/election", electionRouter);
 
 /*let user1=new user({
 

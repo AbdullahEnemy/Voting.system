@@ -12,7 +12,6 @@ require("dotenv").config();
 const { MONGO_URL, PORT } = process.env;
 const app = express();
 
-
 mongoose
   .connect(MONGO_URL, {
     useNewUrlParser: true,
@@ -31,8 +30,8 @@ app.listen(PORT, () => {
 
 app.use(
   cors({
-    origin: ["http://localhost:4000"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
 );
@@ -43,7 +42,7 @@ app.use(express.json());
 
 app.use("/users", userRouter);
 app.use("/constituency", constituencyRouter);
-app.use("/party", partyRouter);
+app.use("/parties", partyRouter);
 app.use("/vote", voteController);
 app.use("/request", userRequest);
 app.use("/election", electionRouter);

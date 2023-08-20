@@ -1,17 +1,19 @@
 const party = require("../models/party");
+const User = require("../models/user");
 
 module.exports.register = async (req, res) => {
   try {
     if (authurize_user(req, res)) return res;
-
     const existingParty = await party.findOne({
-      number: req.body.name,
+      name: req.body.name,
     });
+    console.log(req.body);
     if (existingParty) {
       return res.json({ message: "Party already exists" });
     }
 
     await party.create(req.body);
+
     res.status(200).json({ message: "Party registered successfully" });
   } catch (error) {
     res.status(500).json({
@@ -38,6 +40,21 @@ module.exports.index = async (req, res) => {
 module.exports.delete = async (req, res) => {
   try {
     if (authurize_user(req, res)) return res;
+
+    const existingParty = await party.findOne({ _id: req.params.id });
+
+    if (!existingParty) {
+      return res.status(400).json({ message: "Party not found" });
+    }
+
+    await User.updateMany(
+      { party: existingParty.name },
+      {
+        $set: {
+          userType: "voter",
+        },
+      }
+    );
 
     const deletedparty = await party.findOneAndDelete({
       _id: req.params.id,

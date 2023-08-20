@@ -2,6 +2,7 @@ const Request = require("../models/request");
 const User = require("../models/user");
 const Constituency = require("../models/constituency");
 const party = require("../models/party");
+const request = require("../models/request");
 module.exports.create = async (req, res) => {
   try {
     if (authurize_user("voter", req, res)) return res;
@@ -91,8 +92,11 @@ module.exports.rejectedRequests = async (req, res) => {
 module.exports.approve = async (req, res) => {
   try {
     if (authurize_user("admin", req, res)) return res;
-    const existingUser = await User.findOne({
+    const checkrequest = await request.findOne({
       _id: req.params.id,
+    });
+    const existingUser = await User.findOne({
+      email: checkrequest.candidateEmail,
     });
     if (!existingUser) {
       return res.json({ message: " No User exists" });
@@ -113,12 +117,12 @@ module.exports.approve = async (req, res) => {
     }
     if (existingUser && existingUser.userType === "voter") {
       await User.updateOne(
-        { email: req.body.candidateEmail },
+        { email: checkrequest.candidateEmail },
         {
           $set: {
             userType: "candidate",
-            constituencyNumber: req.body.constituencyNumber,
-            party: req.body.party,
+            constituencyNumber: checkrequest.constituencyNumber,
+            party: checkrequest.party,
           },
         }
       );
@@ -133,13 +137,7 @@ module.exports.approve = async (req, res) => {
 module.exports.reject = async (req, res) => {
   try {
     if (authurize_user("admin", req, res)) return res;
-    const existingUser = await User.findOne({
-      email: req.body.candidateEmail,
-    });
-    if (!existingUser) {
-      return res.json({ message: " No User exists" });
-    }
-    const approvedRequest = await Request.updateOne(
+    const rejectedRequest = await Request.updateOne(
       { _id: req.params.id },
       {
         $set: {
@@ -147,7 +145,7 @@ module.exports.reject = async (req, res) => {
         },
       }
     );
-    if (!approvedRequest) {
+    if (!rejectedRequest) {
       return res.status(400).json({ message: "Request not found" });
     }
     res.status(200).json({ message: "request rejected successfully" });

@@ -1,4 +1,5 @@
 const Constituency = require("../models/constituency");
+const User = require("../models/user");
 
 module.exports.register = async (req, res) => {
   try {
@@ -41,6 +42,15 @@ module.exports.index = async (req, res) => {
 module.exports.delete = async (req, res) => {
   try {
     if (authurize_user(req, res)) return res;
+    const checkConstituency = await Constituency.findOne({
+      _id: req.params.id,
+    });
+    const users = await User.find({ constituency: checkConstituency.number });
+    if (users.length > 0) {
+      return res
+        .status(200)
+        .json({ message: "Cananot delete this constituency" });
+    }
 
     const deletedConstituency = await Constituency.findOneAndDelete({
       _id: req.params.id,
@@ -61,12 +71,23 @@ module.exports.delete = async (req, res) => {
 module.exports.update = async (req, res) => {
   try {
     if (authurize_user(req, res)) return res;
-
+    const existingConstituency = await Constituency.findOne({
+      number: req.body.number,
+    });
+    if (existingConstituency) {
+      return res.json({ message: "Constituency already exists" });
+    }
+    const checkConstituency = await Constituency.findOne({
+      _id: req.params.id,
+    });
+    const user = await User.updateMany(
+      { constituency: checkConstituency.number },
+      { $set: { constituency: req.body.number } }
+    );
     const constituency = await Constituency.updateOne(
       { _id: req.params.id },
-      { $set: { district: req.body.district } }
+      { $set: { district: req.body.district, number: req.body.number } }
     );
-
     if (!constituency) {
       return res.status(400).json({ message: "Constituency not found" });
     }
@@ -88,8 +109,16 @@ module.exports.show = async (req, res) => {
     if (!constituency) {
       return res.json({ message: "No Constituency Found" });
     }
+    const candidates = await User.find({
+      constituencyNumber: constituency.number,
+      userType: "candidate",
+    });
+    const voters = await User.find({
+      constituency: constituency.number,
+      userType: "voter",
+    });
 
-    res.status(200).json(constituency);
+    res.status(200).json({ constituency, voters, candidates });
   } catch (error) {
     res.status(500).json({
       error: `An error occurred during constituency fetching: ${error}`,

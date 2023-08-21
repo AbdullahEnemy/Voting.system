@@ -11,6 +11,8 @@ import Candidates from "./Candidates";
 import Parties from "./Parties";
 import CreateParty from "./CreateParty";
 import UpdateParty from "./UpdateParty";
+import Requests from "./Requests";
+import RequestCreate from "./RequestCreate";
 
 export {
   Login,
@@ -26,4 +28,6 @@ export {
   Parties,
   CreateParty,
   UpdateParty,
+  Requests,
+  RequestCreate,
 };

@@ -8,7 +8,7 @@ router.post("/create", userVerification, requestController.create);
 router.get("/", userVerification, requestController.index);
 router.get("/approved", userVerification, requestController.acceptedRequests);
 router.get("/rejected", userVerification, requestController.rejectedRequests);
-router.patch("/approve/:id/", userVerification, requestController.approve);
+router.patch("/:id/approve", userVerification, requestController.approve);
 router.patch("/:id/reject", userVerification, requestController.reject);
 router.get("/:id", userVerification, requestController.show);
 

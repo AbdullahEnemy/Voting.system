@@ -27,29 +27,11 @@ export default function UserHeader() {
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
               <Link
-                to="/candidates"
+                to="/requests"
                 className="nav-link active"
                 aria-current="page"
               >
-                Candidates
-              </Link>
-            </li>
-            <li className="nav-item active">
-              <Link
-                to="/elections"
-                className="nav-link active"
-                aria-current="page"
-              >
-                Parties
-              </Link>
-            </li>
-            <li className="nav-item active">
-              <Link
-                to="/elections"
-                className="nav-link active"
-                aria-current="page"
-              >
-                Elections
+                Requests
               </Link>
             </li>
           </ul>

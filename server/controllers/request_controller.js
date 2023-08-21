@@ -6,7 +6,6 @@ const request = require("../models/request");
 module.exports.create = async (req, res) => {
   try {
     if (authurize_user("voter", req, res)) return res;
-
     const existingRequest = await Request.findOne({
       candidateEmail: req.body.candidateEmail,
     });
@@ -41,22 +40,31 @@ module.exports.create = async (req, res) => {
     });
   }
 };
+
 module.exports.index = async (req, res) => {
   try {
-    if (authurize_user("admin", req, res)) return res;
+    let Requests;
+    if (!authurize_user("admin", req, res)) {
+      Requests = await Request.find({ status: "pending" });
+      if (!Requests) {
+        return res.json({ message: "No pending Request " });
+      }
+      return res.status(200).json(Requests);
+    } else if (!authurize_user("voter", req, res)) {
+      Requests = await Request.find({ candidateName: req.user.user });
 
-    const Requests = await Request.find({ status: "pending" });
-    if (!Requests) {
-      return res.json({ message: "No pending Request " });
-    }
-
-    res.status(200).json(Requests);
+      if (!Requests) {
+        return res.json({ message: "No Requests " });
+      }
+      return res.status(200).json(Requests);
+    } else return res;
   } catch (error) {
     res.status(500).json({
       error: `An error occurred when fetching Requests: ${error}`,
     });
   }
 };
+
 module.exports.acceptedRequests = async (req, res) => {
   try {
     if (authurize_user("admin", req, res)) return res;

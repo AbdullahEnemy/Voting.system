@@ -17,6 +17,8 @@ import {
   Parties,
   CreateParty,
   UpdateParty,
+  Requests,
+  RequestCreate
 } from "./components/index";
 
 function App() {
@@ -56,6 +58,8 @@ function App() {
           <Route path="/parties" element={<Parties />} />
           <Route path="/parties/new" element={<CreateParty />} />
           <Route path="/parties/:id/edit" element={<UpdateParty />} />
+          <Route path="/requests" element={<Requests />} />
+          <Route path="/requests/new" element={<RequestCreate />} />
         </Routes>
       </div>
     </Router>

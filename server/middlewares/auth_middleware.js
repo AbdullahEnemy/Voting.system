@@ -19,8 +19,6 @@ module.exports.userVerification = async (req, res, next) => {
             status: true,
             user: user.username,
             userType: user.userType,
-            constituency: user.constituency,
-            constituencyNumber: user.constituencyNumber,
           };
           next();
         } else {

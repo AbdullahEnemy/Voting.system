@@ -45,7 +45,7 @@ export default function AdminHeader() {
             </li>
             <li className="nav-item active">
               <Link
-                to="/elections"
+                to="/parties"
                 className="nav-link active"
                 aria-current="page"
               >

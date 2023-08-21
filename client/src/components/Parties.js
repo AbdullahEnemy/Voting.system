@@ -81,7 +81,7 @@ export default function Parties() {
   const table_row = (item) => {
     return (
       <>
-        <td>{<Link to={`/parties/${item._id}`}>{item.name}</Link>}</td>
+        <td>{item.name}</td>
         <td>{item.partyLeader}</td>
         <td>
           <button

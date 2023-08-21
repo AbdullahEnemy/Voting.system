@@ -72,7 +72,9 @@ const indexallVoter = async (req, res) => {
 };
 const indexCandidate = async (req, res) => {
   try {
-    if (authurize_user(req, res)) return res;
+    if (authurize_user(req, res) || authurize_user("voter", req, res))
+      return res;
+    console.log("here");
     const Users = await User.find({ userType: "candidate" });
     if (!Users) {
       return res.json({ message: "No  Users Registered" });

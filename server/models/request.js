@@ -20,7 +20,7 @@ const requestSchema = new mongoose.Schema({
   },
   votingSymbol: {
     type: String,
-    required: [true, "Voting symbol is required"],
+
     unique: false,
   },
   status: {

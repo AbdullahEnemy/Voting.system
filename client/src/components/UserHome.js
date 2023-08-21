@@ -1,10 +1,10 @@
-import UserHeader from "./UserHeader";
+import RequestCreate from "./RequestCreate";
 
 export default function UserHome() {
   return (
     <>
-      <UserHeader />
       <h1>User Home</h1>
+      <RequestCreate />
     </>
   );
 }
